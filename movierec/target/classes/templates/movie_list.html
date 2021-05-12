@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>movielens</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/assets/images/favicon-1.png"
+          th:href="@{/assets/images/favicon-1.png}"/>
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/libs/bootstrap/bootstrap.min.css"
+          th:href="@{/assets/css/libs/bootstrap/bootstrap.min.css}">
+
+    <link rel="stylesheet" type="text/css" href="/assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css"
+          th:href="@{/assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
+
+    <link rel="stylesheet" type="text/css" href="/assets/fonts/ionicons-2.0.1/css/ionicons.min.css"
+          th:href="@{/assets/fonts/ionicons-2.0.1/css/ionicons.min.css}">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/libs/slick/slick.css"
+          th:href="@{/assets/css/libs/slick/slick.css}">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/libs/magnific-popup/magnific-popup.css"
+          th:href="@{/assets/css/libs/magnific-popup/magnific-popup.css}">
+
+    <link rel="stylesheet" type="text/css" href="/style.css"
+          th:href="@{/style.css}">
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
+    <!-- layer -->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
+    <!-- common.js -->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+
+
+<style>
+    #score__component {
+        width: 60%;
+        transition: all 300ms;
+        margin-left: 20%;
+        text-align: center;
+        background-color: #fff;
+        margin-top: 30px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        padding: 1rem;
+        box-shadow: 0px 1px 2px 0px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+    }
+
+    .score__title {
+        font-weight: bold;
+    }
+
+    .score__star__list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .score__star__item {
+
+        position: relative;
+        list-style: none;
+        flex: 1;
+
+    }
+
+    .score__star__img--active {
+        color: tomato;
+    }
+
+    .score__tips {
+        display: none;
+        position: absolute;
+    }
+
+    .score__review__remind {
+        opacity: .7;
+        font-size: .6rem;
+        margin-top: 10px;
+    }
+
+    .score__review__content {
+        width: 90%;
+        margin-left: 5%;
+        border-radius: 5px;
+    }
+
+    .score__comment {
+        display: grid;
+        place-items: center;
+    }
+
+    .score__submit__btn {
+        font-size: .8rem;
+        display: inline-block;
+        cursor: pointer;
+        background-color: rgb(29, 69, 156);
+        padding: 4px 8px;
+        border-radius: 15px;
+        color: #fff;
+        box-shadow: 0px 1px 2px 0px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+    }
+</style>
+
+
+<body class="responsive home-2">
+
+
+<header class="site-header sticky-header layout-2">
+    <div class="header-container">
+        <div class="top-header">
+            <div class="container">
+
+            </div>
+        </div>
+        <div class="bottom-header element-to-stick">
+            <div class="container">
+                <div class="wrap-content-header">
+
+                    <nav class="main-navigation">
+                        <ul class="menu-lists">
+                            <li class="menu-item-has-children">
+
+
+                                <div class="menu-right">
+
+                                    <div class="bp-element-login-popup layout-1 show-icon">
+                                        <div class="login-links">
+                                            TEST
+                                            <a th:if="${user eq null}" class="login" data-active=".box-login"
+                                               data-effect="mfp-zoom-in"
+                                               href="#bp-popup-login" th:href="@{/login/tologin}">
+                                                <!--                                                登录-->
+                                            </a>
+                                            <a th:if="${user ne null}" th:text="@{${user.stuname}}"></a>
+                                        </div>
+                                        <div id="bp-popup-login" class="white-popup mfp-with-anim mfp-hide">
+                                            <div class="loginwrapper">
+
+                                                <div class="login-popup box-register">
+                                                    <div class="media-content"
+                                                         style="background-image: url(assets/images/bg-01.jpg);"></div>
+                                                    <div class="inner-login">
+                                                        <h3 class="title">
+
+                                                            <a href="#login" class="display-box"
+                                                               data-display=".box-login">登录</a>
+                                                            </span>
+                                                        </h3>
+                                                        <div class="form-row">
+                                                            <div class="wrap-form">
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="thim-popular-video_home-2">
+    <div class="container">
+
+        <!--评分实时推荐电影-->
+        <div class="bp-element bp-element-st-list-videos vblog-layout-slider-1">
+            <div class="wrap-element">
+                <div class="heading-post">
+                    <h3 class="title">
+                        实时推荐
+                    </h3>
+                    <div class="description">
+                        实时推荐电影
+                    </div>
+                </div>
+                <div class="list-posts">
+                    <div class="slide-posts  js-call-slick-col" data-numofshow="4" data-numofscroll="1"
+                         data-loopslide="1" data-autoscroll="0" data-speedauto="6000"
+                         data-responsive="[4, 1], [4, 1], [3, 1], [2, 1], [1, 1]">
+                        <div class="wrap-arrow-slick">
+                            <div class="arow-slick prev-slick">
+                                <i class="ion ion-ios-arrow-left"></i>
+                            </div>
+                            <div class="arow-slick next-slick">
+                                <i class="ion ion-ios-arrow-right"></i>
+                            </div>
+                        </div>
+                        <table class="table" id="averageScoreMovies1">
+                            <tr>
+                                <td style="width:196px" th:each="movie : ${onlineRecommendMovies}">
+                                    <div class="item-slick">
+                                        <div class="post-item">
+                                            <div class="pic">
+                                                <img th:src="@{'/img/'+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}+'.jpg'}"
+                                                     alt="IMG">
+                                                <div class="overlay"></div>
+                                                <div class="meta-info">
+                                                    <div class="label" style="background: #e40914;">
+                                                        Hot
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="info">
+
+                                                <!--                                                <span th:text="'日期: '+${#dates.format(ticket.ticketDate, 'yyyy-MM-dd HH:mm:ss')}"></span><br>-->
+                                                <span style="font-weight: bold" th:text="''+${movie.name}"></span><br>
+
+                                                <span th:text="'评分: '+${movie._score}+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}"></span><br>
+
+                                                <span th:text="'导演: '+${movie.director}"></span><br>
+
+                                                <span th:text="'类型: '+${movie.genres}"></span><br>
+
+                                                <span th:text="'语言: '+${movie.language}"></span><br>
+
+                                                <span th:text="'片长: '+${movie.duration}"></span><br>
+
+
+                                                <!-- 评分 -->
+                                                <div class="score__star__rating" onclick="score();">
+                                                    <ul class="score__star__list">
+                                                        <li class="score__star__item">
+                                                            <i class="fa fa-star-o score__star__img "></i>
+                                                            <p class="score__tips">很差</p>
+                                                        </li>
+                                                        <li class="score__star__item">
+                                                            <i class="fa fa-star-o score__star__img"></i>
+                                                            <p class="score__tips">较差</p>
+                                                        </li>
+                                                        <li class="score__star__item">
+                                                            <i class="fa fa-star-o score__star__img"></i>
+                                                            <p class="score__tips">一般</p>
+                                                        </li>
+                                                        <li class="score__star__item">
+                                                            <i class="fa fa-star-o score__star__img"></i>
+                                                            <p class="score__tips">不错</p>
+                                                        </li>
+                                                        <li class="score__star__item">
+                                                            <i class="fa fa-star-o score__star__img"></i>
+                                                            <p class="score__tips">强烈推荐</p>
+                                                        </li>
+
+                                                    </ul>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--历史高分电影-->
+        <div class="bp-element bp-element-st-list-videos vblog-layout-slider-1">
+            <div class="wrap-element">
+                <div class="heading-post">
+                    <h3 class="title">
+                        好评推荐
+                    </h3>
+                    <div class="description">
+                        历史高分电影
+                    </div>
+                </div>
+                <div class="list-posts">
+                    <div class="slide-posts  js-call-slick-col" data-numofshow="4" data-numofscroll="1"
+                         data-loopslide="1" data-autoscroll="0" data-speedauto="6000"
+                         data-responsive="[4, 1], [4, 1], [3, 1], [2, 1], [1, 1]">
+                        <div class="wrap-arrow-slick">
+                            <div class="arow-slick prev-slick">
+                                <i class="ion ion-ios-arrow-left"></i>
+                            </div>
+                            <div class="arow-slick next-slick">
+                                <i class="ion ion-ios-arrow-right"></i>
+                            </div>
+                        </div>
+                        <table class="table" id="averageScoreMovies">
+                            <tr>
+                                <td style="width:196px" th:each="movie : ${averageScoreMovies}">
+                                    <div class="item-slick">
+                                        <div class="post-item">
+                                            <div class="pic">
+                                                <img th:src="@{'/img/'+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}+'.jpg'}"
+                                                     alt="IMG">
+                                                <div class="overlay"></div>
+                                                <div class="meta-info">
+                                                    <div class="label" style="background: #e40914;">
+                                                        Hot
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="info">
+
+                                                <!--                                                <span th:text="'日期: '+${#dates.format(ticket.ticketDate, 'yyyy-MM-dd HH:mm:ss')}"></span><br>-->
+                                                <span style="font-weight: bold" th:text="''+${movie.name}"></span><br>
+
+                                                <span th:text="'评分: '+${movie._score}+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}"></span><br>
+
+                                                <span th:text="'导演: '+${movie.director}"></span><br>
+
+                                                <span th:text="'类型: '+${movie.genres}"></span><br>
+
+                                                <span th:text="'语言: '+${movie.language}"></span><br>
+
+                                                <span th:text="'片长: '+${movie.duration}"></span><br>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--历史热门电影-->
+        <div class="bp-element bp-element-st-list-videos vblog-layout-slider-1">
+            <div class="wrap-element">
+                <div class="heading-post">
+                    <h3 class="title">
+                        热门推荐
+                    </h3>
+                    <div class="description">
+                        历史热门电影
+                    </div>
+                </div>
+                <div class="list-posts">
+                    <div class="slide-posts  js-call-slick-col" data-numofshow="4" data-numofscroll="1"
+                         data-loopslide="1" data-autoscroll="0" data-speedauto="6000"
+                         data-responsive="[4, 1], [4, 1], [3, 1], [2, 1], [1, 1]">
+                        <div class="wrap-arrow-slick">
+                            <div class="arow-slick prev-slick">
+                                <i class="ion ion-ios-arrow-left"></i>
+                            </div>
+                            <div class="arow-slick next-slick">
+                                <i class="ion ion-ios-arrow-right"></i>
+                            </div>
+                        </div>
+                        <table class="table" id="hotMovies">
+                            <tr>
+                                <td style="width:196px" th:each="movie : ${hotMovies}">
+                                    <div class="item-slick">
+                                        <div class="post-item">
+                                            <div class="pic">
+                                                <img th:src="@{'/img/'+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}+'.jpg'}"
+                                                     alt="IMG">
+                                                <div class="overlay"></div>
+                                                <div class="meta-info">
+                                                    <div class="label" style="background: #e40914;">
+                                                        Hot
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="info">
+
+                                                <!--                                                <span th:text="'日期: '+${#dates.format(ticket.ticketDate, 'yyyy-MM-dd HH:mm:ss')}"></span><br>-->
+                                                <span style="font-weight: bold" th:text="''+${movie.name}"></span><br>
+
+                                                <span th:text="'热度: '+${movie.count}+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}"></span><br>
+
+                                                <span th:text="'导演: '+${movie.director}"></span><br>
+
+                                                <span th:text="'类型: '+${movie.genres}"></span><br>
+
+                                                <span th:text="'语言: '+${movie.language}"></span><br>
+
+                                                <span th:text="'片长: '+${movie.duration}"></span><br>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--近期热门电影-->
+        <div class="bp-element bp-element-st-list-videos vblog-layout-slider-1">
+            <div class="wrap-element">
+                <div class="heading-post">
+                    <h3 class="title">
+                        热门推荐
+                    </h3>
+                    <div class="description">
+                        近期热门电影
+                    </div>
+                </div>
+                <div class="list-posts">
+                    <div class="slide-posts  js-call-slick-col" data-numofshow="4" data-numofscroll="1"
+                         data-loopslide="1" data-autoscroll="0" data-speedauto="6000"
+                         data-responsive="[4, 1], [4, 1], [3, 1], [2, 1], [1, 1]">
+                        <div class="wrap-arrow-slick">
+                            <div class="arow-slick prev-slick">
+                                <i class="ion ion-ios-arrow-left"></i>
+                            </div>
+                            <div class="arow-slick next-slick">
+                                <i class="ion ion-ios-arrow-right"></i>
+                            </div>
+                        </div>
+                        <table class="table" id="recentlyHotMovies">
+                            <tr>
+                                <td style="width:196px" th:each="movie : ${recentlyHotMovies}">
+                                    <div class="item-slick">
+                                        <div class="post-item">
+                                            <div class="pic">
+                                                <img th:src="@{'/img/'+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}+'.jpg'}"
+                                                     alt="IMG">
+                                                <div class="overlay"></div>
+                                                <div class="meta-info">
+                                                    <div class="label" style="background: #e40914;">
+                                                        Hot
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="info">
+
+                                                <!--                                                <span th:text="'日期: '+${#dates.format(ticket.ticketDate, 'yyyy-MM-dd HH:mm:ss')}"></span><br>-->
+                                                <span style="font-weight: bold" th:text="''+${movie.name}"></span><br>
+
+                                                <span th:text="'热度: '+${movie.count}+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}"></span><br>
+
+                                                <span th:text="'导演: '+${movie.director}"></span><br>
+
+                                                <span th:text="'类型: '+${movie.genres}"></span><br>
+
+                                                <span th:text="'语言: '+${movie.language}"></span><br>
+
+                                                <span th:text="'片长: '+${movie.duration}"></span><br>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--分类热门电影-->
+        <div class="bp-element bp-element-st-list-videos vblog-layout-slider-1">
+            <div class="wrap-element">
+                <div class="heading-post">
+                    <h3 class="title">
+                        分类热门电影
+                    </h3>
+
+                    <div class="description">
+                        <select id="genresSelect" onchange="doGenresSelect();">
+
+                            <option>Western</option>
+
+                            <option>Action</option>
+
+                            <option>Comedy</option>
+
+                            <option>Romance</option>
+
+                            <option>War</option>
+
+                            <option>Crime</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="list-posts">
+                    <div class="slide-posts  js-call-slick-col" data-numofshow="4" data-numofscroll="1"
+                         data-loopslide="1" data-autoscroll="0" data-speedauto="6000"
+                         data-responsive="[4, 1], [4, 1], [3, 1], [2, 1], [1, 1]">
+                        <div class="wrap-arrow-slick">
+                            <div class="arow-slick prev-slick">
+                                <i class="ion ion-ios-arrow-left"></i>
+                            </div>
+                            <div class="arow-slick next-slick">
+                                <i class="ion ion-ios-arrow-right"></i>
+                            </div>
+                        </div>
+                        <table class="table" id="recentlyHotMovies">
+                            <tr>
+                                <td style="width:196px" th:each="movie : ${hotMoviesByGenres}">
+                                    <div class="item-slick">
+                                        <div class="post-item">
+                                            <div class="pic">
+                                                <img th:src="@{'/img/'+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}+'.jpg'}"
+                                                     alt="IMG">
+                                                <div class="overlay"></div>
+                                                <div class="meta-info">
+                                                    <div class="label" style="background: #e40914;">
+                                                        Hot
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="info">
+
+                                                <!--                                                <span th:text="'日期: '+${#dates.format(ticket.ticketDate, 'yyyy-MM-dd HH:mm:ss')}"></span><br>-->
+                                                <span style="font-weight: bold" th:text="''+${movie.name}"></span><br>
+
+                                                <span th:text="'热度: '+${movie.count}+${#numbers.formatDecimal(T(java.lang.Math).floor(T(java.lang.Math).random()*21),1,0)}"></span><br>
+
+                                                <span th:text="'导演: '+${movie.director}"></span><br>
+
+                                                <span th:text="'类型: '+${movie.genres}"></span><br>
+
+                                                <span th:text="'语言: '+${movie.language}"></span><br>
+
+                                                <span th:text="'片长: '+${movie.duration}"></span><br>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <div class="copyright-area">
+        <div class="container">
+            <div class="thim-1-col">
+                <div class="copyright-text" align="center">
+                    Copyright &copy; 2020.Company name All rights reserved.<a target="_blank"
+                                                                              href="https://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </footer>
+    <div id="thim-preloading">
+        <div class="custom-image">
+            <!--            <img src="assets/images/wave.gif" alt="Loading">-->
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.querySelectorAll('.score__star__img').forEach((e, i) => {
+        e.onclick = () => e.className = /.*?active.*?/.test(e.className) ? 'fa fa-star-o score__star' : e.className + ' score__star__img--active';
+    })
+</script>
+
+<script>
+    $().ready(function () {
+
+    });
+
+    // 点击电影评分
+    function score() {
+        $.ajax({
+            url: "/movie/score",
+            type: "POST",
+            data: {
+                uid: 123,
+                mid: 260,
+                score: 5
+            },
+            success: function (data) {
+                layer.closeAll();
+                if (data.code == 0) {
+                    layer.msg("评分成功");
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                layer.closeAll();
+            }
+        });
+    }
+
+    // 选择电影分类
+    function doGenresSelect() {
+        var Selc = document.getElementById("genresSelect");
+        var genres = Selc.options[Selc.selectedIndex].text;
+        console.log(genres)
+        $.ajax({
+            url: "/movie/genresselect",
+            type: "POST",
+            data: {
+                genres: genres
+            },
+            success: function (data) {
+                layer.closeAll();
+                if (data.code == 0) {
+                    layer.msg("切换分类成功，请刷新页面");
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                layer.closeAll();
+            }
+        });
+    }
+</script>
+
+
+<script src="assets/js/libs/jquery/jquery.js" th:href="@{/assets/js/libs/jquery/jquery.js}"></script>
+
+<script src="assets/js/libs/bootstrap/popper.js" th:href="@{/assets/js/libs/bootstrap/popper.js}"></script>
+<script src="assets/js/libs/bootstrap/bootstrap.min.js"
+        th:href="@{/assets/js/libs/bootstrap/bootstrap.min.js}"></script>
+
+<script src="assets/js/libs/magnific-popup/jquery.magnific-popup.min.js"
+        th:href="@{/assets/js/libs/magnific-popup/jquery.magnific-popup.min.js}"></script>
+
+<script src="assets/js/libs/slick/slick.min.js" th:href="@{/assets/js/libs/slick/slick.min.js}"></script>
+
+<script src="assets/js/libs/isotope/isotope.pkgd.min.js"
+        th:href="@{/assets/js/libs/isotope/isotope.pkgd.min.js}"></script>
+
+<script src="assets/js/libs/select2/select2.min.js" th:href="@{/assets/js/libs/select2/select2.min.js}"></script>
+
+<script src="assets/js/thim-custom.js" th:href="@{/assets/js/thim-custom.js}"></script>
+<div id="back-to-top" class="btn-back-to-top">
+    <i class="ion ion-ios-arrow-thin-up"></i>
+</div>
+</body>
+</html>
